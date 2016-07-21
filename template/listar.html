@@ -1,0 +1,88 @@
+{% extends 'index.html' %}
+{% block contenido%}
+	<a href="crear">
+		<button class="alert alert-success">
+	 		<span class="glyphicon glyphicon-plus"></span>
+	 		<span class="glyphicon glyphicon-user"></span>	 		
+	 	</button>
+	</a>
+  
+<!--	{% if clientes %}
+						<div class="alert alert-success">Si existen registros ingresados</div>			
+					{% else %}
+						<div class="alert alert-success">No hay Registros Ingresados</div>
+					{% endif%}
+					<form class="form-inline" role="form" method="POST" action="">{% csrf_token %}
+				{{form.as_p}}
+					<input type="submit" value="Agregar">
+				</form>
+-->	
+	<center>
+		<h4 class="alert alert-info">
+			<strong>LISTADO DE CLIENTES</strong>
+		</h4>
+	</center>
+	
+	<table class="table table-hover" >	
+		<tr>
+			<td><b>Cedula</b></td>
+			<td><b>Nombres</b></td>
+			<td><b>Apellidos</b></td>						
+			<td><b>Correo</b></td>
+			<td><b>Telefono</b></td>
+			<td><b>Celular</b></td>
+			<td><b>Direccion</b></td>
+			<td><b>Genero</b></td>
+			<td><b>Estado Civil</b></td>
+			<td><b>Fecha Nacimiento</b></td>
+			<td><b>Opciones</b></td>
+		</tr>
+	{% for cl in clientes %}
+		<tr>
+			<td><a href="modificar?cedula={{cl.cedula}}">{{cl.cedula}}</a></td>
+			<td>{{cl.nombres}}</td>
+			<td>{{cl.apellidos}}</td>						
+			<td>{{cl.correo}}</td>
+			<td>{{cl.telefono}}</td>
+			<td>{{cl.celular}}</td>
+			<td>{{cl.direccion}}</td>
+			<td>{{cl.genero}}</td>
+			<td>{{cl.estadoCivil}}</td>
+			<td>{{cl.fechaNacimiento}}</td>
+			<td>
+				<a href="eliminar?cedula={{cl.cedula}}">
+					<button class="btn btn-link">
+	 					<span class="glyphicon glyphicon-remove-sign"></span>		
+	 				</button>
+	 			</a> |  
+	 			<a href="reporte?cedula={{cl.cedula}}">
+					<button class="btn btn-link">
+	 					<span class="glyphicon glyphicon-file"></span>
+	 				</button>
+	 			</a> | 
+	 			<a href="pdf?cedula={{cl.cedula}}">
+					<button class="btn btn-link">
+	 					<span class="glyphicon glyphicon-eye-open"></span>
+	 					<span class="glyphicon glyphicon-file"></span>
+	 				</button>
+	 			</a>
+	 			|
+	 			<a href="cuentas?cedula={{cl.cedula}}">
+					<button class="btn btn-link">
+	 					<span class="glyphicon glyphicon-folder-open"></span>
+	 				</button>
+	 			</a>
+	 			
+	 		</td>
+	{% endfor %}
+		</tr>
+	</table>
+	<center>
+		<a href="nuevo_user">
+			<button class="alert alert-danger">
+	 			<span class="glyphicon glyphicon-log-out"></span> 		
+	 			<p>Cerrar Sesion</p>
+	 		</button>
+	 	</a>
+	</center>
+{% endblock contenido %}

@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+{% block contenido%}
+	<center>
+		<h4 class="alert alert-info"><strong>CREAR NUEVO CLIENTE </strong></h4>
+	</center>
+	<!--
+		<p class="alert alert-danger">
+			<span class="glyphicon glyphicon-alert"> </span> 
+			Recuerde que todos los campos son obligatorios...
+		</p>
+	-->
+	
+	<div>
+		<form class="well well-lg" role="form" method="POST" action="">
+			{% csrf_token %}
+			<div class="form-group">
+				{{form.as_p}}	
+			<input type="submit" value="Aceptar" class="btn btn-success">
+		</form>
+	</div>
+	<center>
+		<a href="../../caja">
+			<button class="btn btn-danger"> CANCELAR
+		 		<span class="glyphicon glyphicon-arrow-left"></span>	 
+	 			<span class="glyphicon glyphicon-list"></span> 			
+	 		</button> 
+		</a>
+	</center>
+	<br>
+{% endblock contenido %}

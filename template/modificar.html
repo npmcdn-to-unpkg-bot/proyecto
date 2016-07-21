@@ -1,0 +1,26 @@
+{% extends 'index.html' %}
+{% block contenido%}
+	<center>
+		<h4 class="alert alert-info">
+			<strong>MODIFICAR CLIENTE {{cliente.nombres}}
+			 		{{cliente.apellidos}}<br>
+					CI: {{cliente.cedula}}
+			</strong>
+		</h4>
+	</center>
+	<form class="well well-lg" role="form" method="POST" action="">
+		{% csrf_token %}
+		{{form.as_p}}
+		<input type="submit" value="Guardar" class="btn btn-success"><br>
+	</form>
+
+	<center>
+		<a href="../../caja">
+			<button class="btn btn-danger"> CANCELAR
+		 		<span class="glyphicon glyphicon-arrow-left"></span>	 
+	 			<span class="glyphicon glyphicon-list"></span> 			
+	 		</button> 
+		</a>
+	</center>
+	<br>	
+{% endblock contenido %}

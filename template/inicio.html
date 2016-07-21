@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Datos Agenda</title>
+</head>
+<body>
+	<h3>{{Titulo}}</h3>
+	{% if form %}
+	<form method="POST" action="">{% csrf_token %}
+		{{form.as_p}}
+		<input type="submit" value="Aceptar">
+	</form>
+	{% endif %}
+	<h3>FINAL DEL FORMULARIO</h3>
+		
+</body>
+</html>
