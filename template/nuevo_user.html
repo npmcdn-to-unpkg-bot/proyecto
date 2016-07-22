@@ -5,7 +5,7 @@
 			<h3 class="alert alert-info">INGRESO AL SISTEMA</h3>
 		</strong>
 	</center>
-  	<form  role="form" id='formulario' method='POST' action=''>
+	<form  role="form" id='formulario' method='POST' action=''>
   		{% csrf_token %}
 	  	<div class="form-group">	  		
 			<center>
@@ -13,11 +13,14 @@
 				<button class="alert alert-success" >INGRESAR
 		 			<span class="glyphicon glyphicon-log-in"></span> 
 		 		</button>
-				{% for msg in messages %}	
-					<p class="alert alert-danger">
-						<span class="glyphicon glyphicon-alert"></span>{{msg.message}}
-					</p>				
-				{% endfor %}
+		 		<br>
+		 		{% if messages %}
+					{% for msg in messages %}	
+						<label class="alert alert-danger">
+							<span class="glyphicon glyphicon-alert"></span>{{msg.message}}
+						</label>				
+					{% endfor %}
+				{% endif %}
 			</center>
 		</div>
 	</form>

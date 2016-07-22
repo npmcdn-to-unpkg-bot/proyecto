@@ -6,7 +6,7 @@ urlpatterns = [
 	url(r'^crear/$','caja.views.crear'),
 	url(r'^modificar/$','caja.views.modificar'),
 	url(r'^eliminar/$','caja.views.eliminar'),     
-	url(r'^eliminarCliente/$','caja.views.eliminarCliente'),     #falta pdf
+	url(r'^eliminarCliente/$','caja.views.eliminarCliente'),    
 	url(r'^cuentas/$','caja.views.cuentas'),
 	url(r'^cuentas/crearcuenta/$','caja.views.crearcuenta'),
 	url(r'^transaccion$','caja.views.transaccion'),

@@ -7,12 +7,13 @@
 	 		<span class="glyphicon glyphicon-folder-open"></span> 		
 	 		<p>CREAR</p>
 	 	</button>
-	</a>
-	<!--
-		{% if cuentas == NULL %}
-			<div class="alert alert-danger">El cliente {{cliente.nombres}} no registra cuentas disponibles</div>
-		{% endif%}
-	-->
+	</a><br>
+	{% if messages %}		
+		{% for msg in messages %}
+			<label class="alert alert-success">{{msg}}</label>
+		{% endfor %}
+	{% endif %}
+
 	<center>
 		<h4 class="alert alert-info">
 			<strong>LISTADO DE CUENTAS DE {{cliente.nombres}} {{cliente.apellidos}}</strong>

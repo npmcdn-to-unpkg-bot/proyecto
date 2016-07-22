@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 #encoding:utf-8
+from django.core.context_processors import csrf
 from reportlab.pdfgen import canvas
 from django.contrib import messages
 from django.http import HttpResponse
@@ -18,7 +19,6 @@ def nuevo_user(request):
 	context = {
 		'form':f,
 	}
-	mensaje=''
 	if request.method=="POST":
 		username = request.POST["username"]
 		password = request.POST["password"]
@@ -26,16 +26,13 @@ def nuevo_user(request):
 		if usuario is not None:
 			if usuario.is_active:
 				login(request,usuario)
-				messages.add_message(request, messages.SUCCESS, "Usuario Valido", fail_silently=True)
+				messages.add_message(request, messages.SUCCESS, "Hola, estamos listos para empezar a trabajar... EMPEZEMOS ", fail_silently=True)
 				return redirect(listar)
 			else:
 				messages.add_message(request, messages.ERROR, "Contrasenia Invalida", fail_silently=True)
 		else:
 			messages.add_message(request, messages.ERROR, "Usuario y Contrasenia Invalidos", fail_silently=True)
 			return redirect(nuevo_user)
-		context = {
-			'mensaje':mensaje,
-		}
 	return render(request,'nuevo_user.html',context)
 	
 	#if user is not None:
@@ -56,7 +53,7 @@ def listar(request):
 def crear(request):
 	f = Formulario_Crear(request.POST or None)
 	context ={
-		"Titulo1":"Formulario para crear datos",
+#		"Titulo1":"Formulario para crear datos",
 		"form":f,
 	}
 
@@ -74,7 +71,7 @@ def crear(request):
 		cliente.genero = datos_form.get("genero")
 		cliente.estadoCivil = datos_form.get("estadoCivil")
 		cliente.fechaNacimiento = datos_form.get("fechaNacimiento")
-		
+
 		if (cliente.save() != True):
 			cuenta=CuentaAhorros()
 			cuenta.cliente=cliente
@@ -83,14 +80,14 @@ def crear(request):
 			cuenta.saldo = 0
 			cuenta.save()
 			if (cuenta.save()):
-				context={
-					'validar':"Se creo correctamente su cuenta",
-				}
-			
+				messages.add_message(request, messages.SUCCESS, "Lo sentimos, no se ha podido registrar el cliente", fail_silently=True)
+			else:
+				messages.add_message(request, messages.ERROR, "Se ha registrado un nuevo cliente, Bienvenido " +str(cliente.nombres), fail_silently=True)
+
 			return redirect('/caja')
-	context ={
-		"form":f,
-	}
+	#context ={
+	#	"form":f,
+	#}
 	return render(request,'crear.html',context)
 
 def buscar(request):
@@ -129,9 +126,9 @@ def modificar(request):
 			cliente.estadoCivil = f_data.get("estadoCivil")
 			cliente.fechaNacimiento = f_data.get("fechaNacimiento")
 			if (cliente.save()):
-				messages.add_message(request, messages.ERROR, "No se ha modificado el cliente", fail_silently=True)
+				messages.add_message(request, messages.ERROR, "No se ha modificado el cliente ", fail_silently=True)
 			else:	
-				messages.add_message(request, messages.SUCCESS, "Se ha modificado el cliente", fail_silently=True)
+				messages.add_message(request, messages.SUCCESS, "Se ha modificado el cliente "+str(cliente.nombres), fail_silently=True)
 			return redirect(listar)
 
 	return render(request,'modificar.html',context)
@@ -166,8 +163,10 @@ def activarcuenta(request):
 	cu= CuentaAhorros.objects.get(numeroCuenta=cuenta)
 	if(cu.estado==True):
 		cu.estado=False
+		messages.add_message(request, messages.SUCCESS, "Cuenta Desactivada", fail_silently=True)
 	else:
 		cu.estado=True
+		messages.add_message(request, messages.ERROR, "Cuenta Activada", fail_silently=True)
 	cu.save()
 	return redirect("/caja/cuentas?cedula="+ced)
 
@@ -178,8 +177,12 @@ def crearcuenta(request):
 	objcuenta.cliente=cl #referencia de la cuenta ahorros igual al id del cliente
 	objcuenta.numeroCuenta = len(CuentaAhorros.objects.all())+1 
 	objcuenta.estado = True
-	objcuenta.saldo = 10.00
+	objcuenta.saldo = 00.00
 	objcuenta.save()
+	if (objcuenta.save()):
+		messages.add_message(request, messages.SUCCESS, "Lo sentimos, No se ha podido crear una nueva cuenta", fail_silently=True)
+	else: 
+		messages.add_message(request, messages.ERROR, "Se ha creado una nueva cuenta", fail_silently=True)
 
 	return redirect('/caja/cuentas?cedula='+ced)
 	#return render(request,'cuentas.html',{})
@@ -193,8 +196,9 @@ def eliminarcuenta(request):
 	#return render(request,'eliminarcuenta.html',{})
 
 def transaccion(request):
+	# coding=utf-8
+	#mensaje=""
 	f = Formulario_Transaccion(request.POST or None)
-	mensaje=''
 	if request.method=="POST":
 		if f.is_valid():
 			datos = f.cleaned_data
@@ -207,22 +211,22 @@ def transaccion(request):
 			t.fecha=datetime.now()
 			if(t.tipo=="deposito"):
 				cuenta.saldo=cuenta.saldo+t.valor
-				mensaje="Deposito realizado con exito"
+				#mensaje="Se realizo su deposito, su saldo actual es de "+str(cuenta.saldo)+" dolares"
+				messages.add_message(request, messages.SUCCESS, "Se realizo con Exito su Deposito, su Saldo atual es de $"+str(cuenta.saldo)+" dolares", fail_silently=True)
 				cuenta.save()
 				t.save()
 				return redirect(listar)
 			else:
 				if(cuenta.saldo>t.valor):
 					cuenta.saldo=cuenta.saldo-t.valor
-					mensaje="Retiro realizado con exito"
+					messages.add_message(request, messages.SUCCESS, "Se realizo con Exito su Retiro, su Saldo atual es de $"+str(cuenta.saldo)+" dolares", fail_silently=True)
 					cuenta.save()
 					t.save()
 					return redirect(listar)
 				else:
-					mensaje="Saldo insuficiente para la transaccion"
+					messages.add_message(request, messages.ERROR, "Su saldo es Insuficiente para realizar esta Transaccion", fail_silently=False)					
 	context ={
 		"form":f,
-		"mensaje":mensaje,
 	}
 	return	render(request,'transaccion.html',context)
 
@@ -255,8 +259,15 @@ def reporte(request):
 	t=cliente.fechaNacimiento 
 	p.drawString(150, 570,t.strftime('%m/%d/%Y')) 
 	p.showPage() 
-	p.save() 
+	p.save()
+	if (p.save()):
+		messages.add_message(request, messages.ERROR, "Lo sentimos, No se ha podido generar su reporte", fail_silently=True)
+	else:
+		messages.add_message(request, messages.SUCCESS, "Se ha generado correctamente su reporte", fail_silently=True)
+		
+	#response
 	return response
+
 
 def pdf(request):
 	with open('C:\Users\Chris\Downloads\documento.pdf', 'r') as pdf:
