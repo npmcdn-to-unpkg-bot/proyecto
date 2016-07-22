@@ -26,7 +26,7 @@ def nuevo_user(request):
 		if usuario is not None:
 			if usuario.is_active:
 				login(request,usuario)
-				messages.add_message(request, messages.SUCCESS, "Hola, estamos listos para empezar a trabajar... EMPEZEMOS ", fail_silently=True)
+				messages.add_message(request, messages.SUCCESS, "Registro correcto... Hola " +str(username)+ " BIENVENIDO ", fail_silently=True)
 				return redirect(listar)
 			else:
 				messages.add_message(request, messages.ERROR, "Contrasenia Invalida", fail_silently=True)
@@ -188,13 +188,22 @@ def crearcuenta(request):
 	#return render(request,'cuentas.html',{})
 
 def eliminarcuenta(request):
-	ced=request.GET['cedula']
+	cliente=Cliente.objects.get(cedula=request.GET['cedula'])
 	cuenta = request.GET['cuenta']
 	cu=CuentaAhorros.objects.get(numeroCuenta=cuenta)
-	cu.delete()
-	return redirect('/caja/cuentas?cedula='+ced)
+	context={
+		'cu':cu,
+	}
+	return render(request,'eliminarcuenta.html',context)
 	#return render(request,'eliminarcuenta.html',{})
-
+def confirmacion_eliminar_cu(request):
+	cu = CuentaAhorros.objects.get(numeroCuenta=request.GET['cuenta'])
+	if (cu.delete()):
+		messages.add_message(request, messages.SUCCESS, "Se ha eliminado su cuenta correctamente", fail_silently=True)
+	else: 
+		messages.add_message(request, messages.ERROR, "No se ha eliminado su cuenta", fail_silently=True)
+	return redirect(listar)
+	
 def transaccion(request):
 	# coding=utf-8
 	#mensaje=""
@@ -231,50 +240,56 @@ def transaccion(request):
 	return	render(request,'transaccion.html',context)
 
 def reporte(request):
-	response =HttpResponse(content_type='application/pdf') 
-	response['Content-Disposition'] = 'attachment; filename=documento.pdf' 
-	ced=request.GET['cedula']
-	cliente=Cliente.objects.get(cedula=ced) 
-	p = canvas.Canvas(response) 
-	p.drawString(300, 800, "DATOS CLIENTE") 
-	p.drawString(20, 750, "Nombre:") 
-	p.drawString(20, 730, "Apellido:") 
-	p.drawString(20, 710, "Cedula:") 
-	p.drawString(20, 690, "Correo:") 
-	p.drawString(20, 670, "Telefono:") 
-	p.drawString(20, 650, "Celular:") 
-	p.drawString(20, 630, "Direccion:") 
-	p.drawString(20, 610, "Sexo:") 
-	p.drawString(20, 590, "Estado Civil:") 
-	p.drawString(20, 570, "Fecha de Nacimiento:") 
-	p.drawString(150, 750, cliente.nombres) 
-	p.drawString(150, 730, cliente.apellidos) 
-	p.drawString(150, 710, cliente.cedula) 
-	p.drawString(150, 690, cliente.correo) 
-	p.drawString(150, 670, cliente.telefono) 
-	p.drawString(150, 650, cliente.celular) 
-	p.drawString(150, 630, cliente.direccion) 
-	p.drawString(150, 610, cliente.genero) 
-	p.drawString(150, 590, cliente.estadoCivil) 
-	t=cliente.fechaNacimiento 
-	p.drawString(150, 570,t.strftime('%m/%d/%Y')) 
-	p.showPage() 
-	p.save()
-	if (p.save()):
-		messages.add_message(request, messages.ERROR, "Lo sentimos, No se ha podido generar su reporte", fail_silently=True)
-	else:
+	try:
+		response =HttpResponse(content_type='application/pdf') 
+		response['Content-Disposition'] = 'attachment; filename=documento.pdf' 
+		ced=request.GET['cedula']
+		cliente=Cliente.objects.get(cedula=ced) 
+		p = canvas.Canvas(response) 
+		p.drawString(300, 800, "DATOS CLIENTE") 
+		p.drawString(20, 750, "Nombre:") 
+		p.drawString(20, 730, "Apellido:") 
+		p.drawString(20, 710, "Cedula:") 
+		p.drawString(20, 690, "Correo:") 
+		p.drawString(20, 670, "Telefono:") 
+		p.drawString(20, 650, "Celular:") 
+		p.drawString(20, 630, "Direccion:") 
+		p.drawString(20, 610, "Sexo:") 
+		p.drawString(20, 590, "Estado Civil:") 
+		p.drawString(20, 570, "Fecha de Nacimiento:") 
+		p.drawString(150, 750, cliente.nombres) 
+		p.drawString(150, 730, cliente.apellidos) 
+		p.drawString(150, 710, cliente.cedula) 
+		p.drawString(150, 690, cliente.correo) 
+		p.drawString(150, 670, cliente.telefono) 
+		p.drawString(150, 650, cliente.celular) 
+		p.drawString(150, 630, cliente.direccion) 
+		p.drawString(150, 610, cliente.genero) 
+		p.drawString(150, 590, cliente.estadoCivil) 
+		t=cliente.fechaNacimiento 
+		p.drawString(150, 570,t.strftime('%m/%d/%Y')) 
+		p.showPage() 
+		p.save()
 		messages.add_message(request, messages.SUCCESS, "Se ha generado correctamente su reporte", fail_silently=True)
-		
-	#response
-	return response
+		#response
+		return response
+	except Exception, e:
+		messages.add_message(request, messages.ERROR, "Lo sentimos, no se genero correctamente su reporte", fail_silently=True)
+		return redirect(listar)
 
 
 def pdf(request):
-	with open('C:\Users\Chris\Downloads\documento.pdf', 'r') as pdf:
+	try:
+		with open('C:\Users\Chris\Downloads\documento.pdf', 'r') as pdf:
 		#pdf.encode('utf-8').strip()
-		response = HttpResponse(pdf.read(), content_type='application/pdf')
-		response['Content-Disposition'] = 'inline;filename=reporte.pdf'
-		return response
-	pdf.closed
+			response = HttpResponse(pdf.read(), content_type='application/pdf')
+			response['Content-Disposition'] = 'inline;filename=reporte.pdf'
+			#messages.add_message(request, messages.SUCCESS, "Se genero correctamente su reporte", fail_silently=True)
+			return response
+		pdf.closed
+	except Exception, e:
+		messages.add_message(request, messages.ERROR, "No tiene reportes generados", fail_silently=True)
+		return redirect(listar)
+	
 
 	

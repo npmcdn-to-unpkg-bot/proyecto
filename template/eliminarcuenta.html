@@ -1,5 +1,16 @@
 {% extends 'index.html' %}
 {% block contenido%}
+	<center><h4 class="alert alert-info"><strong>ELIMINAR CUENTA </strong></h4></center>
+	<br><br>
+	<h3>¿Está seguro de eliminar su cuenta ? </h3>
+	<br>
+	<label class="alert alert-danger"><span class="glyphicon glyphicon-alert"></span> Se eliminara todos los datos de la cuenta...</label><br>
+	<a href="../confirmacion_eliminar_cu?cuenta={{cu.numeroCuenta}}" class="btn btn-success"> Sí, estoy seguro</a>
+	<a href="../../caja">
+		 <button class="btn btn-danger">
+		 	No, por ahora 
+		 </button>
+	 </a>
+	</h3>
 
-	<h3>estoy eliminando la cuenta</h3>
 {% endblock contenido %}

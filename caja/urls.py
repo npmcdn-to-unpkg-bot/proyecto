@@ -15,5 +15,5 @@ urlpatterns = [
 	url(r'^nuevo_user/$','caja.views.nuevo_user'),
 	url(r'^reporte/$','caja.views.reporte'),
 	url(r'^pdf/$','caja.views.pdf'),
-	
+	url(r'^confirmacion_eliminar_cu/$','caja.views.confirmacion_eliminar_cu'),
 ]
