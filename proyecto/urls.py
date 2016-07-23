@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 #importa las vistas 
-from servicioWeb.views import ClienteViewSet, CajaAhorrosViewSet, CuentaAhorrosViewSet
+from servicioWeb.views import ClienteViewSet, CajaAhorrosViewSet, CuentaAhorrosViewSet, TransaccionViewSet
 from rest_framework.routers import DefaultRouter
 
 #definir las clases commo una ruta normal
@@ -24,6 +24,7 @@ router = DefaultRouter()
 router.register(r'cliente',ClienteViewSet)
 router.register(r'caja',CajaAhorrosViewSet)
 router.register(r'cuenta',CuentaAhorrosViewSet)
+router.register(r'transaccion',TransaccionViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

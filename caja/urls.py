@@ -16,4 +16,5 @@ urlpatterns = [
 	url(r'^reporte/$','caja.views.reporte'),
 	url(r'^pdf/$','caja.views.pdf'),
 	url(r'^confirmacion_eliminar_cu/$','caja.views.confirmacion_eliminar_cu'),
-]
+	url(r'^ver_listado/$','caja.views.ver_listado'),
+	]

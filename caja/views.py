@@ -291,5 +291,7 @@ def pdf(request):
 		messages.add_message(request, messages.ERROR, "No tiene reportes generados", fail_silently=True)
 		return redirect(listar)
 	
+def ver_listado(request):
+	return render(request,"pagina1.html",{})
 
 	

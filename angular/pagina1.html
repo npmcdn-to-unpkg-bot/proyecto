@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pagina 1</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="angular/angular.min.js"></script>
+	<script src="angular/angular-resource.min.js"></script>
+	<script src="js/pagina.js"></script>
+</head>
+<body ng-app="app">
+<div ng-controller="controlador">
+	<div class="container">
+			<div class="well well-lg">
+				<center><img class="img-thumbnail" src="img/1.jpg" width="600px" style="float:rigth"></center>
+				<h2 class="text-info">BANCO GRANAHORRAR</h2>
+				<p>Coop. de Ahorro y credito </p>
+			</div>
+		</div>
+		<center>
+			<h4 class="alert alert-info">
+				<strong>CLIENTES REGISTRADOS</strong>
+			</h4>
+		</center>
+		<p>Permite la visualizacion de los clientes registrado en "GRANAHORRAR"</p>
+		<table class="table table-hover">
+			<tr>
+				<th>CEDULA</th>
+				<th>NOMBRES</th>
+				<th>APELLIDOS</th>
+				<th>CORREO</th>
+				<th>TELEFONO</th>
+				<th>CELULAR</th>	
+				<th>DIRECCION</th>
+				<th>GENERO</th>
+				<th>ESTADO CIVIL</th>
+				<th>FECHA NACIMIENTO</th>
+			</tr>
+			<tr ng-repeat="cliente in lista_cliente | filter:busqueda">
+				<td>{{cliente.cedula}}</td>
+				<td>{{cliente.nombres}}</td>
+				<td>{{cliente.apellidos}}</td>
+				<td>{{cliente.correo}}</td>
+				<td>{{cliente.telefono}}</td>
+				<td>{{cliente.celular}}</td>
+				<td>{{cliente.direccion}}</td>
+				<td>{{cliente.genero}}</td>			
+				<td>{{cliente.estadoCivil}}</td>
+				<td>{{cliente.fechaNacimiento}}</td>
+			</tr>
+		</table>
+		<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
+		<center>
+			<h4 class="alert alert-info">
+				<strong>CUENTAS REGISTRADAS</strong>
+			</h4>
+		</center>
+		<p>Permite la visualizacion de las cuentas de los clientes"GRANAHORRAR"</p>
+		<table class="table table-hover">
+			<tr>
+				<th>NUMERO DE CUENTA</th>
+				<th>ESTTADO</th>
+				<th>FECHA APERTURA</th>
+				<th>SALDO</th>
+			</tr>
+			<tr ng-repeat="cuenta in lista_cuenta | filter:busqueda">
+				<td>{{cuenta.numeroCuenta}}</td>
+				<td>{{cuenta.estado}}</td>
+				<td>{{cuenta.fechaApertura}}</td>
+				<td>{{cuenta.saldo}}</td>
+			</tr>
+		</table>
+		<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
+		<center>
+			<h4 class="alert alert-info">
+				<strong>TRANSACCIONES REALIZADAS</strong>
+			</h4>
+		</center>
+		<p>Permite la visualizacion de las las transacciones realizadas por los clientes</p>
+		<table class="table table-hover">
+			<tr>
+				<th>FECHA</th>
+				<th>DESCRIPCION</th>
+				<th>TIPO</th>
+				<th>CANTIDAD</th>
+			</tr>
+			<tr ng-repeat="trans in lista_transaccion | filter:busqueda">
+				<td>{{trans.fecha}}</td>
+				<td>{{trans.descripcion}}</td>
+				<td>{{trans.tipo}}</td>
+				<td>{{trans.valor}}</td>
+			</tr>
+		</table>
+		<div class="container">
+			<div class="well well-lg">
+				<div class="text-info">
+					<center>
+						<strong>Carrera de Ingenieria en Sistemas</strong></br>
+								Quinto Ciclo Paralelo "A"</br>
+								2016
+						<br>	
+					</center>
+				<span class="glyphicon glyphicon-registration-mark"></span>
+				<p class="glyphicon glyphicon-copyright-mark"></p>
+				Derechos reservados por el autor
+				</div>
+			</div>
+		</div>
+	</div>
+</div>		  
+</body>
+</html>
